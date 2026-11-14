@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use App\Models\Project;
 
 class ProjectController extends Controller
@@ -29,7 +30,16 @@ class ProjectController extends Controller
      */
     public function store(Request $request)
     {
-        Project::create($request->all());
+        $validated = $request->validate([
+            'title'       => 'required|string|max:255',
+            'description' => 'nullable|string',
+            'deadline'    => 'required|date',
+            'status'      => 'required|string',
+        ]);
+
+        $validated['user_id'] = Auth::id();
+
+        Project::create($validated);
         return redirect()->route('projects.index');
     }
 
@@ -54,7 +64,16 @@ class ProjectController extends Controller
      */
     public function update(Request $request, Project $project)
     {
-        $project->update($request->all());
+        $validated = $request->validate([
+            'title'       => 'required|string|max:255',
+            'description' => 'nullable|string',
+            'deadline'    => 'required|date',
+            'status'      => 'required|string',
+        ]);
+
+        $validated['user_id'] = Auth::id();
+
+        $project->update($validated);
         return redirect()->route('projects.index');
     }
 
