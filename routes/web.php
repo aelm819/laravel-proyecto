@@ -20,4 +20,12 @@ Route::middleware('auth')->group(function () {
 
 Route::resource('projects', ProjectController::class)->middleware('auth');
 
+Route::post('/projects/{project}/users', [ProjectController::class, 'attachUser'])
+    ->name('projects.users.attach')
+    ->middleware('auth');
+
+Route::delete('/projects/{project}/users/{user}', [ProjectController::class, 'detachUser'])
+    ->name('projects.users.detach')
+    ->middleware('auth');
+    
 require __DIR__ . '/auth.php';

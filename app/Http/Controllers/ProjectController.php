@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Project;
+use App\Models\User;
 
 class ProjectController extends Controller
 {
@@ -48,7 +49,8 @@ class ProjectController extends Controller
      */
     public function show(Project $project)
     {
-        return view('projects.show', compact('project'));
+        $users = User::all();
+        return view('projects.show', compact('project', 'users'));
     }
 
     /**
@@ -84,5 +86,36 @@ class ProjectController extends Controller
     {
         $project->delete();
         return redirect()->route('projects.index');
+    }
+
+    public function attachUser(Request $request, Project $project)
+    {
+        $validated = $request->validate([
+            'user_id' => 'required|exists:users,id',
+            'role'    => 'required|string',
+            'contribution_hours' => 'required|integer|min:1',
+        ]);
+
+        $project->users()->attach(
+            $validated['user_id'],
+            [
+                'role' => $validated['role'],
+                'contribution_hours' => $validated['contribution_hours']
+            ]
+        );
+
+        // $project->users()->syncWithoutDetaching([
+        //     $validated['user_id'] => [
+        //         'role' => $validated['role'],
+        //         'contribution_hours' => $validated['contribution_hours'],
+        //     ]
+        // ]);
+        return redirect()->route('projects.show', $project);
+    }
+
+    public function detachUser(Project $project, User $user)
+    {
+        $project->users()->detach($user->id);
+        return redirect()->route('projects.show', $project);
     }
 }
