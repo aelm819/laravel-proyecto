@@ -41,7 +41,8 @@ class ProjectController extends Controller
         $validated['user_id'] = Auth::id();
 
         Project::create($validated);
-        return redirect()->route('projects.index');
+        return redirect()->route('projects.index')
+            ->with('success', 'Proyecto creado correctamente.');
     }
 
     /**
@@ -76,7 +77,8 @@ class ProjectController extends Controller
         $validated['user_id'] = Auth::id();
 
         $project->update($validated);
-        return redirect()->route('projects.index');
+        return redirect()->route('projects.index')
+            ->with('success', 'Proyecto actualizado correctamente.');
     }
 
     /**
@@ -85,7 +87,8 @@ class ProjectController extends Controller
     public function destroy(Project $project)
     {
         $project->delete();
-        return redirect()->route('projects.index');
+        return redirect()->route('projects.index')
+            ->with('success', 'Proyecto eliminado correctamente.');
     }
 
     public function attachUser(Request $request, Project $project)
@@ -110,12 +113,14 @@ class ProjectController extends Controller
         //         'contribution_hours' => $validated['contribution_hours'],
         //     ]
         // ]);
-        return redirect()->route('projects.show', $project);
+        return redirect()->route('projects.show', $project)
+            ->with('success', 'Colaborador asignado al proyecto.');
     }
 
     public function detachUser(Project $project, User $user)
     {
         $project->users()->detach($user->id);
-        return redirect()->route('projects.show', $project);
+        return redirect()->route('projects.show', $project)
+            ->with('success', 'Colaborador eliminado del proyecto.');
     }
 }
