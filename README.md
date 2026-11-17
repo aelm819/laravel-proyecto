@@ -62,7 +62,7 @@ npm install
 npm run build
 ```
 
-Abre [http://localhost:8000](http://localhost:8000). El puerto se puede cambiar mediante `APP_PORT` en `.env`.
+Abre [http://localhost](http://localhost). El puerto se puede cambiar mediante `APP_PORT` en `.env`.
 
 Para compilar los recursos mientras desarrollas, ejecuta `npm run dev`. Para detener los contenedores:
 

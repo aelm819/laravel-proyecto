@@ -40,10 +40,12 @@
                 ← Volver al listado
             </a>
 
-            <a href="{{ route('projects.edit', $project) }}"
-               class="bg-amber-500 hover:bg-amber-600 text-white text-sm font-medium px-4 py-2 rounded-lg transition">
-                Editar proyecto
-            </a>
+            @if ($project->user_id === Auth::id())
+                <a href="{{ route('projects.edit', $project) }}"
+                   class="bg-amber-500 hover:bg-amber-600 text-white text-sm font-medium px-4 py-2 rounded-lg transition">
+                    Editar proyecto
+                </a>
+            @endif
         </div>
     </div>
 
@@ -71,15 +73,17 @@
                         </span>
                     </div>
 
-                    <form action="{{ route('projects.users.detach', [$project, $user]) }}" method="POST"
-                          onsubmit="return confirm('¿Seguro que quieres quitar a {{ $user->name }} de este proyecto?');">
-                        @csrf
-                        @method('DELETE')
-                        <button type="submit"
-                                class="text-sm font-medium text-red-600 hover:text-red-800 bg-red-50 hover:bg-red-100 px-3 py-1 rounded-md transition cursor-pointer">
-                            Eliminar
-                        </button>
-                    </form>
+                    @if ($project->user_id === Auth::id())
+                        <form action="{{ route('projects.users.detach', [$project, $user]) }}" method="POST"
+                              onsubmit="return confirm('¿Seguro que quieres quitar a {{ $user->name }} de este proyecto?');">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit"
+                                    class="text-sm font-medium text-red-600 hover:text-red-800 bg-red-50 hover:bg-red-100 px-3 py-1 rounded-md transition cursor-pointer">
+                                Eliminar
+                            </button>
+                        </form>
+                    @endif
                 </div>
             @empty
                 <p class="text-sm text-gray-500 italic py-2">
@@ -89,9 +93,10 @@
         </div>
     </div>
 
-    <!-- 3. Formulario de asignación y validación -->
-    <div class="bg-white rounded-lg shadow p-6">
-        <h2 class="text-lg font-semibold text-gray-900 mb-4">Asignar colaborador</h2>
+    <!-- 3. Formulario de asignación y validación (solo propietario) -->
+    @if ($project->user_id === Auth::id())
+        <div class="bg-white rounded-lg shadow p-6">
+            <h2 class="text-lg font-semibold text-gray-900 mb-4">Asignar colaborador</h2>
 
         <form action="{{ route('projects.users.attach', $project) }}" method="POST">
             @csrf
@@ -151,6 +156,7 @@
                 </div>
             </div>
         </form>
-    </div>
+        </div>
+    @endif
 
 @endsection

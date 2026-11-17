@@ -52,21 +52,27 @@
                            class="text-indigo-600 hover:text-indigo-800 transition">
                             Ver
                         </a>
-                        <a href="{{ route('projects.edit', $project) }}"
-                           class="text-amber-600 hover:text-amber-800 transition">
-                            Editar
-                        </a>
+                        @if ($project->user_id === Auth::id())
+                            <a href="{{ route('projects.edit', $project) }}"
+                               class="text-amber-600 hover:text-amber-800 transition">
+                                Editar
+                            </a>
+                        @endif
                     </div>
 
-                    <form action="{{ route('projects.destroy', $project) }}" method="POST"
-                          onsubmit="return confirm('¿Seguro que quieres eliminar este proyecto?');">
-                        @csrf
-                        @method('DELETE')
-                        <button type="submit"
-                                class="text-red-600 hover:text-red-800 transition cursor-pointer">
-                            Eliminar
-                        </button>
-                    </form>
+                    @if ($project->user_id === Auth::id())
+                        <form action="{{ route('projects.destroy', $project) }}" method="POST"
+                              onsubmit="return confirm('¿Seguro que quieres eliminar este proyecto?');">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit"
+                                    class="text-red-600 hover:text-red-800 transition cursor-pointer">
+                                Eliminar
+                            </button>
+                        </form>
+                    @else
+                        <span class="text-xs text-gray-400 font-normal">Colaborador</span>
+                    @endif
                 </div>
             </div>
         @empty
