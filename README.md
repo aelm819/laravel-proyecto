@@ -1,58 +1,101 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Gestor de proyectos
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Aplicación web para organizar proyectos y sus equipos de trabajo. Los usuarios pueden crear proyectos, consultar sus detalles y asignar colaboradores con un rol y horas de contribución.
 
-## About Laravel
+## Funcionalidades
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+- Registro, inicio y cierre de sesión.
+- Recuperación y cambio de contraseña, verificación de correo y edición del perfil.
+- Creación, consulta, edición y eliminación de proyectos.
+- Gestión del equipo de cada proyecto: asignación de colaboradores, rol y horas aportadas.
+- Cálculo de las horas totales de contribución por proyecto.
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+Las rutas de proyectos requieren iniciar sesión.
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+## Tecnologías
 
-## Learning Laravel
+- PHP 8.3 o superior y Laravel 13.
+- MySQL 8.4.
+- Node.js, npm, Vite y Tailwind CSS.
+- Laravel Sail y Docker Compose para el entorno de desarrollo.
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+## Requisitos
 
-In addition, [Laracasts](https://laracasts.com) contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+- Git
+- PHP 8.3+ y Composer
+- Node.js y npm
+- Docker y Docker Compose
 
-You can also watch bite-sized lessons with real-world projects on [Laravel Learn](https://laravel.com/learn), where you will be guided through building a Laravel application from scratch while learning PHP fundamentals.
+## Instalación y puesta en marcha
 
-## Agentic Development
-
-Laravel's predictable structure and conventions make it ideal for AI coding agents like Claude Code, Cursor, and GitHub Copilot. Install [Laravel Boost](https://laravel.com/docs/ai) to supercharge your AI workflow:
+Clona el repositorio y entra en su directorio:
 
 ```bash
-composer require laravel/boost --dev
-
-php artisan boost:install
+git clone <URL_DEL_REPOSITORIO>
+cd laravel-proyecto
 ```
 
-Boost provides your agent 15+ tools and skills that help agents build Laravel applications while following best practices.
+Instala las dependencias de PHP y crea la configuración local:
 
-## Contributing
+```bash
+composer install
+cp .env.example .env
+```
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+Inicia los contenedores de la aplicación y MySQL:
 
-## Code of Conduct
+```bash
+./vendor/bin/sail up -d --build
+```
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+Genera la clave de la aplicación, crea las tablas y carga los datos de ejemplo:
 
-## Security Vulnerabilities
+```bash
+./vendor/bin/sail artisan key:generate
+./vendor/bin/sail artisan migrate --seed
+```
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+Instala las dependencias de JavaScript y compila los recursos:
 
-## License
+```bash
+npm install
+npm run build
+```
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+Abre [http://localhost:8000](http://localhost:8000). El puerto se puede cambiar mediante `APP_PORT` en `.env`.
+
+Para compilar los recursos mientras desarrollas, ejecuta `npm run dev`. Para detener los contenedores:
+
+```bash
+./vendor/bin/sail down
+```
+
+## Datos de ejemplo
+
+El seeder crea proyectos, colaboradores y cuentas de prueba. En una base de datos recién creada, la cuenta de administrador de ejemplo es:
+
+- **Correo:** `admin@admin.com`
+- **Contraseña:** `password123`
+
+Estas credenciales son únicamente para desarrollo local. Cámbialas o elimina la cuenta antes de desplegar la aplicación.
+
+## Pruebas
+
+Ejecuta la suite de pruebas con:
+
+```bash
+./vendor/bin/sail artisan test
+```
+
+## Estructura del proyecto
+
+- `app/Models` — modelos de usuarios y proyectos.
+- `app/Http/Controllers` — controladores de proyectos, perfil y autenticación.
+- `database/migrations` — esquema de la base de datos.
+- `database/seeders` — datos iniciales y de demostración.
+- `resources/views` — vistas Blade de la aplicación.
+- `routes/web.php` y `routes/auth.php` — rutas web y de autenticación.
+
+## Licencia
+
+Este proyecto utiliza Laravel, distribuido bajo la [licencia MIT](https://opensource.org/licenses/MIT).
